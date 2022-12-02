@@ -12,42 +12,35 @@
                     <div class="filter-widget">
                         <h4 class="fw-title">Categories</h4>
                         <ul class="filter-catagories">
+                            {% for i in categories %}
+                                {% if selected %}
+                                    {% if selected.id==i.id %}
+                                    <li><a href="/category/{{i.id}}"><strong style="font-weight: 900;">{{i.name}}</strong></a></li>
+                                    {% else %}
+                                    <li><a href="/category/{{i.id}}">{{i.name}}</a></li>                        
+                                    {% endif %}
+                                {% else %}                                
+                                <li><a href="/category/{{i.id}}">{{i.name}}</a></li>     
+                                {% endif %}
+                            {% endfor %}
+                            <!-- <li><a href="#">Category Name</a></li>
                             <li><a href="#">Category Name</a></li>
-                            <li><a href="#">Category Name</a></li>
-                            <li><a href="#">Category Name</a></li>
+                            <li><a href="#">Category Name</a></li> -->
                         </ul>
                     </div>
                     <div class="filter-widget">
                         <h4 class="fw-title">Brand</h4>
                         <div class="fw-brand-check">
+                            {% for i in brands %}
                             <div class="bc-item">
-                                <label for="bc-calvin">
-                                    Brand Name
-                                    <input type="checkbox" id="bc-calvin">
+                                <label for="brand-{{i.id}}">
+                                    {{i.name}}
+                                    <input class="brand-checkbox" name="brand-checkbox" value="{{i.id}}" type="checkbox" id="brand-{{i.id}}">
                                     <span class="checkmark"></span>
                                 </label>
                             </div>
-                            <div class="bc-item">
-                                <label for="bc-diesel">
-                                    Brand Name
-                                    <input type="checkbox" id="bc-diesel">
-                                    <span class="checkmark"></span>
-                                </label>
-                            </div>
-                            <div class="bc-item">
-                                <label for="bc-polo">
-                                    Brand Name
-                                    <input type="checkbox" id="bc-polo">
-                                    <span class="checkmark"></span>
-                                </label>
-                            </div>
-                            <div class="bc-item">
-                                <label for="bc-tommy">
-                                    Brand Name
-                                    <input type="checkbox" id="bc-tommy">
-                                    <span class="checkmark"></span>
-                                </label>
-                            </div>
+                            {% endfor %}
+                            <button onclick="return apply_brand()" class="btn btn-sm btn-primary">apply</button>
                         </div>
                     </div>
                     <div class="filter-widget">
@@ -160,6 +153,7 @@
                     </div>
                     <div class="product-list">
                         <div class="row">
+                            {% for i in products %}
                             <div class="col-lg-4 col-sm-6">
                                 <div class="product-item">
                                     <div class="pi-pic">
@@ -170,13 +164,39 @@
                                         </div>
                                         <ul>
                                             <li class="w-icon active"><a href="#"><i class="fa-solid fa-cart-shopping"></i></a></li>
-                                            <li class="quick-view"><a href="#">+ Quick View</a></li>
+                                            <li class="quick-view"><a href="/product-details/{{i.id}}">+ Quick View</a></li>
+                                        </ul>
+                                    </div>
+                                    <div class="pi-text">
+                                        <div class="catagory-name">{{i.category}}</div>
+                                        <a href="/product-details/{{i.id}}">
+                                            <h5>{{i.name}}</h5>
+                                        </a>
+                                        <div class="product-price">
+                                            &euro;{{ "{:,.0f}".format(i.price) }}
+                                            <span>$35.00</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                            <!-- <div class="col-lg-4 col-sm-6">
+                                <div class="product-item">
+                                    <div class="pi-pic">
+                                        <img src="/static/assets/img/products/Untitled-design-91.png" alt="">
+                                        <div class="sale pp-sale">Sale</div>
+                                        <div class="icon">
+                                            <i class="icon_heart_alt"></i>
+                                        </div>
+                                        <ul>
+                                            <li class="w-icon active"><a href="#"><i class="fa-solid fa-cart-shopping"></i></a></li>
+                                            <li class="quick-view"><a href="/product-details">+ Quick View</a></li>
                                         </ul>
                                     </div>
                                     <div class="pi-text">
                                         <div class="catagory-name">Category</div>
-                                        <a href="#">
-                                            <h5>Product Name</h5>
+                                        <a href="/product-details">
+                                            <h5>Product Namexs</h5>
                                         </a>
                                         <div class="product-price">
                                             $14.00
@@ -377,7 +397,7 @@
                                         </div>
                                     </div>
                                 </div>
-                            </div>
+                            </div> -->
                         </div>
                     </div>
                     <div class="loading-more">
@@ -390,4 +410,22 @@
             </div>
         </div>
     </section>
+    {% endblock %}
+    {% block scripts %}
+    <script>
+        function apply_brand(){
+            // var inputs = $(".brand-checkbox");            
+            // for(var i = 0; i < inputs.length; i++){
+            //     console.log("he")
+            //     console.log($(inputs[i]).val());
+            // }
+            const brand_ids = [];
+            $("input:checkbox[name=brand-checkbox]:checked").each(function(){
+                brand_ids.push($(this).val());
+                // console.log($(this).val());
+                console.log(brand_ids);
+                window.location = '/apply-brand/' + brand_ids;
+            });
+        }
+    </script>
     {% endblock %}

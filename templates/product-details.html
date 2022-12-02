@@ -5,22 +5,14 @@
         <div class="container-fluid">
             <div class="row">
                 <div class="col-lg-6">
-                    <img src="/static/assets/img/product-detail-carousel/Untitled-design-89-1.png" alt="">
+                    <!-- <img src="/static/assets/img/product-detail-carousel/Untitled-design-89-1.png" alt=""> -->
+                    <img src="/static/assets/img/products/{{product.image}}" alt="">
                 </div>
                 <div class="col-lg-6">
-                    <h2>product name</h2>
-                    <p>A recent addition to our collection, the London Bedstore Sofa brings with it the elegance and
-                        poise of a traditional bedstore, with a clean and contemporary edge.</p>
-                    <p>Inspired by its namesake, this model mirrors the cool, cosmopolitan London spirit.</p>
-                    <p>A deep seat, supported with snug seat cushions against a traditional buttoned back, the London
-                        offers a softer sit, remaining surprisingly supportive around the back.</p>
-                    <p>Handcrafted with a single button border, studded trim, and mahogany-stained feet, the London
-                        captures the timeless characteristics of a traditional Bedstore with a contemporary style unique
-                        to this model.</p>
-                    <p>Make the London unique to your space with a choice of fabrics and leathers in a range of bold,
-                        muted, and traditional colours.</p>
+                    <h2>{{product.name}}</h2>
+                    <p>{{product.description}}</p>
                     <h5>From:</h5>
-                    <h4>&euro; 1,409.00</h4>
+                    <h4>&euro; {{ "{:,.0f}".format(product.price) }}</h4>
                     <h5>Or From &euro; 26.42 / Month</h5>
                     <hr class="mb-4">
                     <a href="" class="mt-4 buy-btn">buy now</a>

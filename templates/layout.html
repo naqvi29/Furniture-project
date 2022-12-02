@@ -54,7 +54,7 @@
         <div class="row">
           <div class="col-lg-2 col-md-2">
             <div class="logo">
-              <a href="index.html">
+              <a href="/">
                 <img src="/static/assets/img/distinctive-chesterfields.svg" alt="" />
               </a>
             </div>
@@ -140,21 +140,24 @@
             <i class="fa-solid fa-bars"></i>
             <span>All Categories</span>
             <ul class="depart-hover">
-              <li><a href="#">Bedstore Sofas</a></li>
+              {% for i in categories %}
+              <li><a href="/category/{{i.id}}">{{i.name}}</a></li>
+              {% endfor %}
+              <!-- <li><a href="#">Bedstore Sofas</a></li>
               <li><a href="#">Corner Sofas</a></li>
               <li><a href="#">Sofas</a></li>
               <li><a href="#">Chairs</a></li>
               <li><a href="#">Stools & Chaise Lounges</a></li>
               <li><a href="#">Popular</a></li>
               <li><a href="#">Free Brochure & Samples</a></li>
-              <li><a href="#">In Stock</a></li>
+              <li><a href="#">In Stock</a></li> -->
             </ul>
           </div>
         </div>
         <nav class="nav-menu mobile-menu">
           <ul>
-            <li class="active"><a href="index.html">Home</a></li>
-            <li><a href="shop.html">Shop</a></li>
+            <li  {% if home %}class="active"{%endif%}><a href="/">Home</a></li>
+            <li {% if shop %}class="active"{%endif%}><a href="/shop">Shop</a></li>
             <li>
               <a href="#">Showrooms</a>
               <ul class="dropdown">
@@ -163,7 +166,7 @@
               </ul>
             </li>
             <li><a href="#">News</a></li>
-            <li><a href="contact.html">Contact</a></li>
+            <li {% if contact %}class="active"{%endif%}><a href="/contact">Contact</a></li>
             <li>
               <a href="#">Help</a>
               <ul class="dropdown">
@@ -191,13 +194,16 @@
       </div>
       <div class="col-lg-12 d-flex justify-content-between">
         <ul class="list-unstyled">
-          <li><a href="#">bedstore sofas</a></li>
+          {% for i in categories %}
+          <li><a href="/category/{{i.id}}">{{i.name}}</a></li>
+          {% endfor %}
+          <!-- <li><a href="#">bedstore sofas</a></li>
           <li><a href="#">corner sofas</a></li>
           <li><a href="#">sofas</a></li>
           <li><a href="#">chairs</a></li>
           <li><a href="#">sofa beds</a></li>
           <li><a href="#">stools & chase lounges</a></li>
-          <li><a href="#">popular</a></li>
+          <li><a href="#">popular</a></li> -->
         </ul>
         <a href="" class="link_last link-danger">in stock</a>
       </div>

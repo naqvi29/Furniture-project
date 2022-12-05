@@ -40,7 +40,7 @@
                                 </label>
                             </div>
                             {% endfor %}
-                            <button onclick="return apply_brand()" class="btn btn-sm btn-primary">apply</button>
+                            <button onclick="return apply_brand()" class="apply-btn">apply</button>
                         </div>
                     </div>
                     <div class="filter-widget">
@@ -48,18 +48,21 @@
                         <div class="filter-range-wrap">
                             <div class="range-slider">
                                 <div class="price-input">
+                                    <label for="minamount">$</label>
                                     <input type="text" id="minamount">
+                                    
+                                    <label for="maxamount">$</label>
                                     <input type="text" id="maxamount">
                                 </div>
                             </div>
                             <div class="price-range ui-slider ui-corner-all ui-slider-horizontal ui-widget ui-widget-content"
-                                data-min="33" data-max="98">
+                                data-min="10" data-max="10000">
                                 <div class="ui-slider-range ui-corner-all ui-widget-header"></div>
                                 <span tabindex="0" class="ui-slider-handle ui-corner-all ui-state-default"></span>
                                 <span tabindex="0" class="ui-slider-handle ui-corner-all ui-state-default"></span>
                             </div>
                         </div>
-                        <a href="#" class="filter-btn">Filter</a>
+                        <button onclick="return apply_price()" href="#" class="filter-btn">Apply</button>
                     </div>
                     <div class="filter-widget">
                         <h4 class="fw-title">Color</h4>
@@ -426,6 +429,14 @@
                 console.log(brand_ids);
                 window.location = '/apply-brand/' + brand_ids;
             });
+        }
+
+        
+        function apply_price(){
+            min_amount = document.getElementById("minamount").value;
+            max_amount = document.getElementById("maxamount").value;
+            
+            window.location = '/apply-price/' + min_amount+'/'+max_amount;
         }
     </script>
     {% endblock %}

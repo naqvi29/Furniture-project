@@ -2081,6 +2081,7 @@ ol {
 	border-radius: 2px;
 	display: inline-block;
 	text-transform: uppercase;
+	border: white;
 }
 
 .filter-widget .fw-color-choose .cs-item {
@@ -4543,3 +4544,18 @@ ol {
 		padding-right: 15px;
 	}
 }
+
+.apply-btn{
+	font-size: 14px;
+    color: #ffffff;
+    font-weight: 700;
+    background: #e7ab3c;
+    padding: 7px 20px 5px;
+    border-radius: 2px;
+    display: inline-block;
+    text-transform: uppercase;
+	border: white;
+	
+}
+
+/* groot  */

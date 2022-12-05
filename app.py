@@ -68,15 +68,28 @@ def category(id):
 
 @app.route("/apply-brand/<string:json>")
 def apply_brand(json):
-    brand_ids = json.split()
+    print(json)
+    brand_ids = "("+json+")"
+    print(brand_ids)
     cursor = mysql.connection.cursor()
     cursor.execute('Select * from categories;')    
     categories = cursor.fetchall()
     cursor.execute('Select * from brands;')    
     brands = cursor.fetchall()
-    cursor.execute('Select * from products where brand_id in "1,2";')    
+    cursor.execute('Select * from products where brand_id in '+brand_ids)
     products = cursor.fetchall()
-    return jsonify({"data":products})
+    return render_template("shop.html",shop=True,categories=categories,brands=brands,products=products)
+
+@app.route("/apply-price/<string:minamount>/<string:maxamount>")
+def apply_price(minamount,maxamount):
+    print(minamount, maxamount)
+    cursor = mysql.connection.cursor()
+    cursor.execute('Select * from categories;')    
+    categories = cursor.fetchall()
+    cursor.execute('Select * from brands;')    
+    brands = cursor.fetchall()
+    cursor.execute('SELECT * FROM products where price >= %s and price <= %s;',(minamount,maxamount))
+    products = cursor.fetchall()
     return render_template("shop.html",shop=True,categories=categories,brands=brands,products=products)
 
 if __name__ =="__main__":

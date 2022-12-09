@@ -15,7 +15,11 @@
                     <h4>&euro; {{ "{:,.0f}".format(product.price) }}</h4>
                     <h5>Or From &euro; 26.42 / Month</h5>
                     <hr class="mb-4">
-                    <a href="" class="mt-4 buy-btn">buy now</a>
+                    {% if loggedin %}
+                    <a href="#" class="mt-4 buy-btn">buy now</a>
+                    {% else %}
+                    <a href="/login" class="mt-4 buy-btn">buy now</a>
+                    {% endif %}
                 </div>
             </div>
         </div>

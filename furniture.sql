@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 02, 2022 at 02:52 PM
+-- Generation Time: Dec 09, 2022 at 02:59 PM
 -- Server version: 10.4.27-MariaDB
 -- PHP Version: 8.1.12
 
@@ -76,20 +76,21 @@ INSERT INTO `categories` (`id`, `name`) VALUES
 CREATE TABLE `colors` (
   `id` int(11) NOT NULL,
   `name` text NOT NULL,
-  `code` text NOT NULL
+  `code` text NOT NULL,
+  `product_ids` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL CHECK (json_valid(`product_ids`))
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `colors`
 --
 
-INSERT INTO `colors` (`id`, `name`, `code`) VALUES
-(1, 'Black', '#000000'),
-(2, 'Blue', '#0000FF'),
-(3, 'Red', '#FF0000'),
-(4, 'Purple', '#800080'),
-(5, 'Yellow', '#FFFF00'),
-(6, 'Green', '#008000');
+INSERT INTO `colors` (`id`, `name`, `code`, `product_ids`) VALUES
+(1, 'Black', '#000000', '[1, 2]'),
+(2, 'Blue', '#0000FF', '[1, 2]'),
+(3, 'Red', '#FF0000', '[1, 2]'),
+(4, 'Purple', '#800080', '[2]'),
+(5, 'Yellow', '#FFFF00', ''),
+(6, 'Green', '#008000', '');
 
 -- --------------------------------------------------------
 
@@ -117,8 +118,50 @@ CREATE TABLE `products` (
 --
 
 INSERT INTO `products` (`id`, `category_id`, `brand_id`, `color_ids`, `category`, `brand`, `name`, `price`, `sizes`, `tags`, `description`, `image`) VALUES
-(1, 1, 1, '[1, 2, 3]', 'Bedstore Sofas', 'InterWood', 'Sofa Alva 2 Seater', 39785, '[S, M, L, XS]', '[sofa, interwood, furniture]', 'A recent addition to our collection, the London Bedstore Sofa brings with it the elegance and poise of a traditional bedstore, with a clean and contemporary edge.\n\nInspired by its namesake, this model mirrors the cool, cosmopolitan London spirit.\n\nA deep seat, supported with snug seat cushions against a traditional buttoned back, the London offers a softer sit, remaining surprisingly supportive around the back.\n\nHandcrafted with a single button border, studded trim, and mahogany-stained feet, the London captures the timeless characteristics of a traditional Bedstore with a contemporary style unique to this model.\n\nMake the London unique to your space with a choice of fabrics and leathers in a range of bold, muted, and traditional colours.', 'Untitled-design-91.png'),
-(2, 2, 2, '[1, 2, 3]', 'Corner Sofas', 'Chenone homes', 'Sofa Alva 2 Seater', 39785, '[S, M, L, XS]', '[sofa, interwood, furniture]', 'A recent addition to our collection, the London Bedstore Sofa brings with it the elegance and poise of a traditional bedstore, with a clean and contemporary edge.\r\n\r\nInspired by its namesake, this model mirrors the cool, cosmopolitan London spirit.\r\n\r\nA deep seat, supported with snug seat cushions against a traditional buttoned back, the London offers a softer sit, remaining surprisingly supportive around the back.\r\n\r\nHandcrafted with a single button border, studded trim, and mahogany-stained feet, the London captures the timeless characteristics of a traditional Bedstore with a contemporary style unique to this model.\r\n\r\nMake the London unique to your space with a choice of fabrics and leathers in a range of bold, muted, and traditional colours.', 'Untitled-design-91.png');
+(1, 1, 1, '[1, 2, 3]', 'Bedstore Sofas', 'InterWood', 'Sofa Alva 2 Seater', 40000, '[S, M, L, XS]', '[sofa, interwood, furniture]', 'A recent addition to our collection, the London Bedstore Sofa brings with it the elegance and poise of a traditional bedstore, with a clean and contemporary edge.\n\nInspired by its namesake, this model mirrors the cool, cosmopolitan London spirit.\n\nA deep seat, supported with snug seat cushions against a traditional buttoned back, the London offers a softer sit, remaining surprisingly supportive around the back.\n\nHandcrafted with a single button border, studded trim, and mahogany-stained feet, the London captures the timeless characteristics of a traditional Bedstore with a contemporary style unique to this model.\n\nMake the London unique to your space with a choice of fabrics and leathers in a range of bold, muted, and traditional colours.', 'Untitled-design-91.png'),
+(2, 2, 2, '[1, 2, 4]', 'Corner Sofas', 'Chenone homes', 'Sofa Alva 2 Seater', 42000, '[S, M, L, XS]', '[sofa, interwood, furniture]', 'A recent addition to our collection, the London Bedstore Sofa brings with it the elegance and poise of a traditional bedstore, with a clean and contemporary edge.\r\n\r\nInspired by its namesake, this model mirrors the cool, cosmopolitan London spirit.\r\n\r\nA deep seat, supported with snug seat cushions against a traditional buttoned back, the London offers a softer sit, remaining surprisingly supportive around the back.\r\n\r\nHandcrafted with a single button border, studded trim, and mahogany-stained feet, the London captures the timeless characteristics of a traditional Bedstore with a contemporary style unique to this model.\r\n\r\nMake the London unique to your space with a choice of fabrics and leathers in a range of bold, muted, and traditional colours.', 'Untitled-design-91.png');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `sizes`
+--
+
+CREATE TABLE `sizes` (
+  `id` int(11) NOT NULL,
+  `name` text NOT NULL,
+  `product_ids` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `sizes`
+--
+
+INSERT INTO `sizes` (`id`, `name`, `product_ids`) VALUES
+(1, 'S', '[1,2]'),
+(2, 'M', '[1,2]'),
+(3, 'L', '[1]'),
+(4, 'XS', '[1]');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `users`
+--
+
+CREATE TABLE `users` (
+  `id` int(11) NOT NULL,
+  `email` text NOT NULL,
+  `name` text NOT NULL,
+  `password` text NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `users`
+--
+
+INSERT INTO `users` (`id`, `email`, `name`, `password`) VALUES
+(2, 'dev@test.com', 'Developer', '1234');
 
 --
 -- Indexes for dumped tables
@@ -149,6 +192,18 @@ ALTER TABLE `products`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indexes for table `sizes`
+--
+ALTER TABLE `sizes`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `users`
+--
+ALTER TABLE `users`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- AUTO_INCREMENT for dumped tables
 --
 
@@ -174,6 +229,18 @@ ALTER TABLE `colors`
 -- AUTO_INCREMENT for table `products`
 --
 ALTER TABLE `products`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
+-- AUTO_INCREMENT for table `sizes`
+--
+ALTER TABLE `sizes`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+
+--
+-- AUTO_INCREMENT for table `users`
+--
+ALTER TABLE `users`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 COMMIT;
 

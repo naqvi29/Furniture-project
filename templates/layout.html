@@ -44,9 +44,19 @@
             <a href="tel:+92 300 0000000">+92 300 0000000</a>
           </div>
         </div>
+        {% if loggedin %}
         <div class="ht-right">
-          <a href="login.html" class="login-panel"><i class="fa fa-user"></i>Login</a>
+          <a href="/logout" class="login-panel"></i>Logout</a>
         </div>
+        <div class="ht-right">
+          <a href="#" class="login-panel"><i class="fa fa-user"></i>{{username}}</a>
+        </div>
+
+        {% else %}
+        <div class="ht-right">
+          <a href="/login" class="login-panel"><i class="fa fa-user"></i>Login</a>
+        </div>
+        {% endif %}
       </div>
     </div>
     <div class="container-fluid">

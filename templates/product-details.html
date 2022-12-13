@@ -1,6 +1,24 @@
 {% extends 'layout.html' %} 
 {% block title %}Product Name | Distinctive Bedstore {% endblock %}
 {% block content %}
+<style>
+    
+    .dot {
+  height: 20px;
+  width: 20px;
+  background-color: #bbb;
+  border-radius: 50%;
+  /* display: inline-block; */
+  display: inline-flex;
+  /* position: absolute; */
+  /* margin-left: 1rem; */
+  /* display: flex; */
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  margin-left: 1rem;
+}
+</style>
     <section class="product_view">
         <div class="container-fluid">
             <div class="row">
@@ -11,14 +29,39 @@
                 <div class="col-lg-6">
                     <h2>{{product.name}}</h2>
                     <p>{{product.description}}</p>
-                    <h5>From:</h5>
+                    <h5>Price:</h5>
                     <h4>&euro; {{ "{:,.0f}".format(product.price) }}</h4>
-                    <h5>Or From &euro; 26.42 / Month</h5>
+                    <!-- <h5>Or From &euro; 26.42 / Month</h5> -->
+                    
+                    
+                    <div class="m-2 ">
+                        <h5>Select Color</h5>
+                        <input style="display: none;" type="text" id="product_id" value="{{product.id}}">
+                        {% for i in colors %}
+                            <input type="radio" id="html" name="sel_color" value="{{i.id}}">
+                            <label for="html">{{i.name}}<span style="background-color: {{i.code}};" class="dot"></span></label><br>
+                        {% endfor %}
+                    </div>
+                    <div class="m-2 ">
+                        <h5>Select Size</h5>
+                        {% for i in sizes %}
+                            <input id="size-radio-{{i.id}}" type="radio" name="sel_size" value="{{i.id}}">                              
+                            <label for="s-size">{{i['name']}}</label>
+                        {% endfor %}
+                    </div>
+                    <div class="m-2 ">
+                        <h5>Qty</h5>
+                        <input type="number" class="" name="qty" id="qty">
+                    </div>
+
+
                     <hr class="mb-4">
                     {% if loggedin %}
-                    <a href="#" class="mt-4 buy-btn">buy now</a>
+                    <a  type="button" class="mt-4 buy-btn">buy now</a>
+                    <a onclick="return add_to_cart()" type="button" class="mt-4 cart-btn">add to cart</a>
                     {% else %}
                     <a href="/login" class="mt-4 buy-btn">buy now</a>
+                    <a type="/login" class="mt-4 cart-btn">add to cart</a>
                     {% endif %}
                 </div>
             </div>
@@ -164,4 +207,29 @@
             </div>
         </div>
     </section>
+    <script>
+        function add_to_cart(){
+            product_id = document.getElementById("product_id").value;
+            color_id = document.querySelector('input[name="sel_color"]:checked').value;
+            size_id = document.querySelector('input[name="sel_size"]:checked').value;
+            qty = document.getElementById("qty").value;
+            data = {"product_id":product_id,"color_id":color_id,"size_id":size_id,"qty":qty}
+            $.ajax({
+                type: "POST",
+                url: "/add-to-cart-route",
+                data: JSON.stringify(data),
+                contentType: "application/json",
+                // dataType: 'json',
+                success: function(result) {
+                    console.log("Result:");
+                    console.log(result);
+                } ,
+                error:function(request,error){
+                    console.log("Error:");
+                    console.log(error);
+
+                }
+            });
+        }
+    </script>
     {% endblock %}

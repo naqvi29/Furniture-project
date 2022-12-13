@@ -128,7 +128,12 @@
                             <div class="fw-size-choose">
                                 {% for i in sizes %}
                                 <div class="">
+                                    {% if loop.index ==1 %}                                    
+                                    <input checked id="size-radio-{{i.id}}" type="radio" name="size-radio" value="{{i.id}}">
+                                    {% else %}
                                     <input id="size-radio-{{i.id}}" type="radio" name="size-radio" value="{{i.id}}">
+                                    
+                                    {% endif %}
                                     <label for="s-size">{{i.name}}</label>
                                 </div>
                                 {% endfor %}
@@ -179,6 +184,7 @@
                     </div>
                     <div class="product-list">
                         <div class="row">
+                            {% if products %}
                             {% for i in products %}
                             <div class="col-lg-4 col-sm-6">
                                 <div class="product-item">
@@ -190,7 +196,7 @@
                                         </div>
                                         <ul>
                                             {% if loggedin %}
-                                            <li class="w-icon active"><a href="#"><i class="fa-solid fa-cart-shopping"></i></a></li>
+                                            <li class="w-icon active"><a href="#" onclick="return add_to_cart('{{i.id}}')"><i class="fa-solid fa-cart-shopping"></i></a></li>
                                             {% else %}
                                             <li class="w-icon active"><a href="/login"><i class="fa-solid fa-cart-shopping"></i></a></li>
                                             {% endif %}
@@ -210,6 +216,16 @@
                                 </div>
                             </div>
                             {% endfor %}
+                            
+                            {% else %} 
+                            
+                                <div class="loading-more">
+                                    <i class="icon_loading"></i>
+                                    <a href="#">
+                                        No Products Found
+                                    </a>
+                                </div>
+                            {% endif %}
                             <!-- <div class="col-lg-4 col-sm-6">
                                 <div class="product-item">
                                     <div class="pi-pic">
@@ -430,12 +446,12 @@
                             </div> -->
                         </div>
                     </div>
-                    <div class="loading-more">
+                    <!-- <div class="loading-more">
                         <i class="icon_loading"></i>
                         <a href="#">
                             Loading More
                         </a>
-                    </div>
+                    </div> -->
                 </div>
             </div>
         </div>
@@ -465,5 +481,29 @@
             
             window.location = '/apply-price/' + min_amount+'/'+max_amount;
         }
+
+        function add_to_cart(product_id){
+            console.log("product ",product_id," is added to cart successfully");
+            data = {"product_id":product_id}
+            $.ajax({
+                type: "POST",
+                url: "/add-to-cart-route",
+                data: JSON.stringify(data),
+                contentType: "application/json",
+                // dataType: 'json',
+                success: function(result) {
+                    console.log("Result:");
+                    console.log(result);
+                } ,
+                error:function(request,error){
+                    console.log("Error:");
+                    console.log(error);
+
+                }
+            });
+        }
     </script>
     {% endblock %}
+    
+    data: JSON.stringify(server_data),
+                contentType: "application/json",

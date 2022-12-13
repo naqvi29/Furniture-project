@@ -26,7 +26,13 @@ def index():
     cursor.execute('Select * from categories;')    
     categories = cursor.fetchall()
     if 'loggedin' in session:
-        return render_template("index.html",home=True,categories=categories,loggedin=True,username=session['name'])
+        cursor.execute('Select * from cart_items where user_id=%s',[session['userid']])
+        cart_items = cursor.fetchall()
+        total = 0
+        for i in cart_items:
+            x = i['price'] * i['qty']
+            total = total + x
+        return render_template("index.html",home=True,categories=categories,loggedin=True,username=session['name'],cart_items=cart_items, total=total)
     else:
         return render_template("index.html",home=True,categories=categories)
 
@@ -85,13 +91,39 @@ def signup():
     return render_template("register.html")
 
 
-@app.route("/contact")
+@app.route("/contact",methods=['GET','POST'])
 def contact():
+    if request.method == 'POST':
+        name = request.form.get("name")
+        email = request.form.get("email")
+        message = request.form.get("message")        
+        cursor = mysql.connection.cursor()
+        cursor.execute('INSERT INTO messages (name,email,message) VALUES (%s,%s,%s);',[name,email,message])
+        mysql.connection.commit()
+        cursor = mysql.connection.cursor()
+        cursor.execute('Select * from categories;')    
+        categories = cursor.fetchall()
+        if 'loggedin' in session:
+            cursor.execute('Select * from cart_items where user_id=%s',[session['userid']])
+            cart_items = cursor.fetchall()
+            total = 0
+            for i in cart_items:
+                x = i['price'] * i['qty']
+                total = total + x
+            return render_template("contact.html",contact=True,categories=categories, send=True,loggedin=True,cart_items=cart_items,total=total)          
+        else:
+            return render_template("contact.html",contact=True,categories=categories, send=True)
     cursor = mysql.connection.cursor()
     cursor.execute('Select * from categories;')    
     categories = cursor.fetchall()
     if 'loggedin' in session:
-        return render_template("contact.html",contact=True,categories=categories,loggedin=True,username=session['name'])
+        cursor.execute('Select * from cart_items where user_id=%s',[session['userid']])
+        cart_items = cursor.fetchall()
+        total = 0
+        for i in cart_items:
+            x = i['price'] * i['qty']
+            total = total + x
+        return render_template("contact.html",contact=True,categories=categories,loggedin=True,username=session['name'],cart_items=cart_items,total=total)
     else:
         return render_template("contact.html",contact=True,categories=categories)
 
@@ -102,10 +134,31 @@ def product_details(id):
     categories = cursor.fetchall()
     cursor.execute('Select * from products where id=%s;',[id])    
     product = cursor.fetchone()
+    colors = []
+    color_ids = json.loads(product['color_ids'])
+    for i in color_ids:
+        cursor.execute('Select * from colors where id=%s;',[i])
+        color = cursor.fetchone()
+        colors.append({"id":color['id'],"name":color['name'],"code":color['code']})
+        
+    sizes = []
+    size_ids = json.loads(product['sizes'])
+    for i in size_ids:
+        cursor.execute('Select * from sizes where id=%s;',[i])
+        size = cursor.fetchone()
+        sizes.append({"id":size['id'],"name":size['name']})
+
+
     if 'loggedin' in session:
-        return render_template("product-details.html",shop=True,categories=categories,product=product,loggedin=True,username=session['name'])
+        cursor.execute('Select * from cart_items where user_id=%s',[session['userid']])
+        cart_items = cursor.fetchall()
+        total = 0
+        for i in cart_items:
+            x = i['price'] * i['qty']
+            total = total + x
+        return render_template("product-details.html",shop=True,categories=categories,product=product,loggedin=True,username=session['name'],colors=colors,sizes=sizes,cart_items=cart_items,total=total)
     else:
-        return render_template("product-details.html",shop=True,categories=categories,product=product)
+        return render_template("product-details.html",shop=True,categories=categories,product=product,colors=colors,sizes=sizes)
 
 @app.route("/shop")
 def shop():
@@ -121,9 +174,75 @@ def shop():
     cursor.execute('Select * from sizes;')    
     sizes = cursor.fetchall()
     if 'loggedin' in session:
-        return render_template("shop.html",shop=True,categories=categories,brands=brands,products=products,colors=colors,sizes=sizes,loggedin=True,username=session['name'])
+        cursor.execute('Select * from cart_items where user_id=%s',[session['userid']])
+        cart_items = cursor.fetchall()
+        total = 0
+        for i in cart_items:
+            x = i['price'] * i['qty']
+            total = total + x
+        return render_template("shop.html",shop=True,categories=categories,brands=brands,products=products,colors=colors,sizes=sizes,loggedin=True,username=session['name'],cart_items=cart_items,total=total)
     else:
         return render_template("shop.html",shop=True,categories=categories,brands=brands,products=products,colors=colors,sizes=sizes)
+
+@app.route("/cart")
+def cart():
+    if 'loggedin' in session:
+        cursor = mysql.connection.cursor()
+        cursor.execute('Select * from cart_items where user_id=%s',[session['userid']])
+        cart_items = cursor.fetchall()
+        total = 0
+        for i in cart_items:
+            x = i['price'] * i['qty']
+            total = total + x
+        return render_template("cart.html",cart_items=cart_items,total=total)
+    else:
+        return redirect(url_for("login"))
+
+@app.route("/add-to-cart-route",methods=['GET','POST'])
+def add_to_cart_route():
+    if request.method == "POST":
+        if 'loggedin' in session:
+            data = request.json
+            product_id = int(data['product_id'])
+            try:
+                color_id = int(data['color_id'])
+            except Exception:
+                color_id = None
+            try:
+                size_id = int(data['size_id'])
+            except Exception:
+                size_id = None
+            try:
+                qty = int(data['qty'])
+            except Exception:
+                qty = 1
+            # fetch product details 
+            
+            cursor = mysql.connection.cursor()
+            cursor.execute('Select * from products where id=%s;',[product_id])    
+            product_details = cursor.fetchone()
+            print("product is : ",product_details)
+
+            # check if the product already in cart:
+            cursor = mysql.connection.cursor()
+            cursor.execute('Select * from cart_items where user_id=%s and product_id=%s;',[session['userid'],product_id])    
+            exist = cursor.fetchone()
+            if exist:
+                prevQty = int(exist['qty'])
+                UpdatedQty = prevQty+1
+                cursor.execute('UPDATE cart_items SET qty=%s WHERE user_id=%s and product_id=%s;',[UpdatedQty,session['userid'],product_id])
+                mysql.connection.commit()
+            else:
+                cursor.execute('INSERT INTO cart_items (user_id,product_id,product_name,qty,price,image,size_id,color_id) VALUES (%s,%s,%s,%s,%s,%s,%s,%s);',[session['userid'],product_id,product_details['name'],qty,float(product_details['price']),product_details['image'],size_id,color_id])
+                mysql.connection.commit()
+            return "True"
+
+        else:
+            return redirect(url_for("login"))
+    else:
+        return redirect(url_for("login"))
+
+
 
 @app.route("/category/<int:id>")
 def category(id):
@@ -137,41 +256,16 @@ def category(id):
     cursor.execute('Select * from products where category_id=%s;',[id])    
     products = cursor.fetchall()
     if 'loggedin' in session:
-        return render_template("shop.html",shop=True,categories=categories,selected=selected,brands=brands,products=products,loggedin=True,username=session['name'])
+        cursor = mysql.connection.cursor()
+        cursor.execute('Select * from cart_items where user_id=%s',[session['userid']])
+        cart_items = cursor.fetchall()
+        total = 0
+        for i in cart_items:
+            x = i['price'] * i['qty']
+            total = total + x
+        return render_template("shop.html",shop=True,categories=categories,selected=selected,brands=brands,products=products,loggedin=True,username=session['name'],cart_items=cart_items,total=total)
     else:
         return render_template("shop.html",shop=True,categories=categories,selected=selected,brands=brands,products=products)
-
-@app.route("/apply-brand/<string:json>")
-def apply_brand(json):
-    print(json)
-    brand_ids = "("+json+")"
-    print(brand_ids)
-    cursor = mysql.connection.cursor()
-    cursor.execute('Select * from categories;')    
-    categories = cursor.fetchall()
-    cursor.execute('Select * from brands;')    
-    brands = cursor.fetchall()
-    cursor.execute('Select * from products where brand_id in '+brand_ids)
-    products = cursor.fetchall()
-    if 'loggedin' in session:
-        return render_template("shop.html",shop=True,categories=categories,brands=brands,products=products,loggedin=True,username=session['name'])
-    else:
-        return render_template("shop.html",shop=True,categories=categories,brands=brands,products=products)
-
-@app.route("/apply-price/<string:minamount>/<string:maxamount>")
-def apply_price(minamount,maxamount):
-    print(minamount, maxamount)
-    cursor = mysql.connection.cursor()
-    cursor.execute('Select * from categories;')    
-    categories = cursor.fetchall()
-    cursor.execute('Select * from brands;')    
-    brands = cursor.fetchall()
-    cursor.execute('SELECT * FROM products where price >= %s and price <= %s;',(minamount,maxamount))
-    products = cursor.fetchall()
-    if 'loggedin' in session:
-        return render_template("shop.html",shop=True,categories=categories,brands=brands,products=products,loggedin=True,username=session['name'])
-    else:
-        return render_template("shop.html",shop=True,categories=categories,brands=brands,products=products)
 
 @app.route("/apply-filter",methods=['POST'])
 def apply_filter():
@@ -226,10 +320,21 @@ def apply_filter():
         categories = cursor.fetchall()
         cursor.execute('Select * from brands;')    
         brands = cursor.fetchall()
+        cursor.execute('Select * from colors;')    
+        colors = cursor.fetchall()
+        cursor.execute('Select * from sizes;')    
+        sizes = cursor.fetchall()
         
         if 'loggedin' in session:
-            return render_template("shop.html",shop=True,categories=categories,brands=brands,products=products,loggedin=True,username=session['name'])
+            cursor = mysql.connection.cursor()
+            cursor.execute('Select * from cart_items where user_id=%s',[session['userid']])
+            cart_items = cursor.fetchall()
+            total = 0
+            for i in cart_items:
+                x = i['price'] * i['qty']
+                total = total + x
+            return render_template("shop.html",shop=True,categories=categories,brands=brands,products=products,loggedin=True,username=session['name'],colors=colors,sizes=sizes,cart_items=cart_items,total=total)
         else:
-            return render_template("shop.html",shop=True,categories=categories,brands=brands,products=products)
+            return render_template("shop.html",shop=True,categories=categories,brands=brands,products=products,colors=colors,sizes=sizes)
 if __name__ =="__main__":
     app.run(debug=True)

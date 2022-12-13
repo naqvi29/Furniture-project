@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 09, 2022 at 02:59 PM
+-- Generation Time: Dec 13, 2022 at 11:18 AM
 -- Server version: 10.4.27-MariaDB
--- PHP Version: 8.1.12
+-- PHP Version: 7.4.33
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -41,6 +41,31 @@ INSERT INTO `brands` (`id`, `name`) VALUES
 (2, 'Chenone homes'),
 (3, 'Habitt'),
 (4, 'Index Furniture');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `cart_items`
+--
+
+CREATE TABLE `cart_items` (
+  `id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `product_id` int(11) NOT NULL,
+  `product_name` text NOT NULL,
+  `qty` int(11) NOT NULL,
+  `price` float NOT NULL,
+  `image` text NOT NULL,
+  `size_id` int(11) DEFAULT NULL,
+  `color_id` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `cart_items`
+--
+
+INSERT INTO `cart_items` (`id`, `user_id`, `product_id`, `product_name`, `qty`, `price`, `image`, `size_id`, `color_id`) VALUES
+(1, 2, 1, 'Sofa Alva 2 Seater', 2, 40000, 'Untitled-design-91.png', NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -89,8 +114,28 @@ INSERT INTO `colors` (`id`, `name`, `code`, `product_ids`) VALUES
 (2, 'Blue', '#0000FF', '[1, 2]'),
 (3, 'Red', '#FF0000', '[1, 2]'),
 (4, 'Purple', '#800080', '[2]'),
-(5, 'Yellow', '#FFFF00', ''),
-(6, 'Green', '#008000', '');
+(5, 'Yellow', '#FFFF00', '[2]'),
+(6, 'Green', '#008000', '[2]');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `messages`
+--
+
+CREATE TABLE `messages` (
+  `id` int(11) DEFAULT NULL,
+  `name` text NOT NULL,
+  `email` text NOT NULL,
+  `message` text NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `messages`
+--
+
+INSERT INTO `messages` (`id`, `name`, `email`, `message`) VALUES
+(NULL, 'developer', 'dev@test.com', 'testing');
 
 -- --------------------------------------------------------
 
@@ -118,8 +163,8 @@ CREATE TABLE `products` (
 --
 
 INSERT INTO `products` (`id`, `category_id`, `brand_id`, `color_ids`, `category`, `brand`, `name`, `price`, `sizes`, `tags`, `description`, `image`) VALUES
-(1, 1, 1, '[1, 2, 3]', 'Bedstore Sofas', 'InterWood', 'Sofa Alva 2 Seater', 40000, '[S, M, L, XS]', '[sofa, interwood, furniture]', 'A recent addition to our collection, the London Bedstore Sofa brings with it the elegance and poise of a traditional bedstore, with a clean and contemporary edge.\n\nInspired by its namesake, this model mirrors the cool, cosmopolitan London spirit.\n\nA deep seat, supported with snug seat cushions against a traditional buttoned back, the London offers a softer sit, remaining surprisingly supportive around the back.\n\nHandcrafted with a single button border, studded trim, and mahogany-stained feet, the London captures the timeless characteristics of a traditional Bedstore with a contemporary style unique to this model.\n\nMake the London unique to your space with a choice of fabrics and leathers in a range of bold, muted, and traditional colours.', 'Untitled-design-91.png'),
-(2, 2, 2, '[1, 2, 4]', 'Corner Sofas', 'Chenone homes', 'Sofa Alva 2 Seater', 42000, '[S, M, L, XS]', '[sofa, interwood, furniture]', 'A recent addition to our collection, the London Bedstore Sofa brings with it the elegance and poise of a traditional bedstore, with a clean and contemporary edge.\r\n\r\nInspired by its namesake, this model mirrors the cool, cosmopolitan London spirit.\r\n\r\nA deep seat, supported with snug seat cushions against a traditional buttoned back, the London offers a softer sit, remaining surprisingly supportive around the back.\r\n\r\nHandcrafted with a single button border, studded trim, and mahogany-stained feet, the London captures the timeless characteristics of a traditional Bedstore with a contemporary style unique to this model.\r\n\r\nMake the London unique to your space with a choice of fabrics and leathers in a range of bold, muted, and traditional colours.', 'Untitled-design-91.png');
+(1, 1, 1, '[1, 2, 3]', 'Bedstore Sofas', 'InterWood', 'Sofa Alva 2 Seater', 40000, '[1,2,3,4]', '[sofa, interwood, furniture]', 'A recent addition to our collection, the London Bedstore Sofa brings with it the elegance and poise of a traditional bedstore, with a clean and contemporary edge.\n\nInspired by its namesake, this model mirrors the cool, cosmopolitan London spirit.\n\nA deep seat, supported with snug seat cushions against a traditional buttoned back, the London offers a softer sit, remaining surprisingly supportive around the back.\n\nHandcrafted with a single button border, studded trim, and mahogany-stained feet, the London captures the timeless characteristics of a traditional Bedstore with a contemporary style unique to this model.\n\nMake the London unique to your space with a choice of fabrics and leathers in a range of bold, muted, and traditional colours.', 'Untitled-design-91.png'),
+(2, 2, 2, '[1, 2, 4]', 'Corner Sofas', 'Chenone homes', 'Sofa Alva 2 Seater', 42000, '[1,2,3,4]', '[sofa, interwood, furniture]', 'A recent addition to our collection, the London Bedstore Sofa brings with it the elegance and poise of a traditional bedstore, with a clean and contemporary edge.\r\n\r\nInspired by its namesake, this model mirrors the cool, cosmopolitan London spirit.\r\n\r\nA deep seat, supported with snug seat cushions against a traditional buttoned back, the London offers a softer sit, remaining surprisingly supportive around the back.\r\n\r\nHandcrafted with a single button border, studded trim, and mahogany-stained feet, the London captures the timeless characteristics of a traditional Bedstore with a contemporary style unique to this model.\r\n\r\nMake the London unique to your space with a choice of fabrics and leathers in a range of bold, muted, and traditional colours.', 'Untitled-design-91.png');
 
 -- --------------------------------------------------------
 
@@ -174,6 +219,12 @@ ALTER TABLE `brands`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indexes for table `cart_items`
+--
+ALTER TABLE `cart_items`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `categories`
 --
 ALTER TABLE `categories`
@@ -212,6 +263,12 @@ ALTER TABLE `users`
 --
 ALTER TABLE `brands`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+
+--
+-- AUTO_INCREMENT for table `cart_items`
+--
+ALTER TABLE `cart_items`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `categories`

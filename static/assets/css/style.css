@@ -1787,6 +1787,15 @@ ol {
 	font-size: 1.125rem;
 	padding: 0.8125rem 1.375rem 0.75rem;
 }
+.product_view .cart-btn{
+	background-color: #e7ab3c;
+	border-color: #252525;
+	color: #fff;
+	text-transform: uppercase;
+	font-size: 1.125rem;
+	padding: 0.8125rem 1.375rem 0.75rem;
+	margin-left: 0.5rem;
+}
 .product_services{
 	padding: 20px 0;
 }

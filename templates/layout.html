@@ -79,6 +79,7 @@
               </div>
             </div>
           </div>
+          {% if loggedin %}
           <div class="col-lg-3 text-right col-md-3">
             <ul class="nav-right">
               <li class="heart-icon">
@@ -96,50 +97,39 @@
                   <div class="select-items">
                     <table>
                       <tbody>
+                        {% for i in cart_items %}
                         <tr>
                             <td class="si-pic">
-                                <img src="/static/assets/img/products/Untitled-design-91.png" alt="" />
+                                <img src="/static/assets/img/products/{{i.image}}" alt="" />
                             </td>
                             <td class="si-text">
                                 <div class="product-selected">
-                                    <p>$60.00 x 1</p>
-                                    <h6>Product Name</h6>
+                                    <p>${{i.price}} x {{i.qty}}</p>
+                                    <h6>{{i.product_name}}</h6>
                                 </div>
                             </td>
                             <td class="si-close">
                                 <i class="fa-solid fa-xmark"></i>
                             </td>
                         </tr>
-                        <tr>
-                            <td class="si-pic">
-                                <img src="/static/assets/img/products/Untitled-design-90.png" alt="" />
-                            </td>
-                            <td class="si-text">
-                                <div class="product-selected">
-                                    <p>$60.00 x 1</p>
-                                    <h6>Product Name</h6>
-                                </div>
-                            </td>
-                            <td class="si-close">
-                                <i class="fa-solid fa-xmark"></i>
-                            </td>
-                        </tr>
+                        {% endfor %}
                     </tbody>
                     </table>
                   </div>
                   <div class="select-total">
                     <span>total:</span>
-                    <h5>$120.00</h5>
+                    <h5>${{total}}</h5>
                   </div>
                   <div class="select-button">
-                    <a href="cart.html" class="primary-btn view-card">VIEW CART</a>
+                    <a href="/cart" class="primary-btn view-card">VIEW CART</a>
                     <a href="checkout.html" class="primary-btn checkout-btn">CHECK OUT</a>
                   </div>
                 </div>
               </li>
-              <li class="cart-price">$150.00</li>
+              <li class="cart-price">${{total}}</li>
             </ul>
           </div>
+          {% endif %}
         </div>
       </div>
     </div>

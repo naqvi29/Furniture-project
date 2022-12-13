@@ -1,6 +1,7 @@
 {% extends 'layout.html' %} 
 {% block title %}Contact Us | Distinctive Bedstore {% endblock %}
 {% block content %}
+<script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <div class="map spad">
         <div class="container">
@@ -58,16 +59,16 @@
                         <div class="leave-comment">
                             <h4>Leave A Comment</h4>
                             <p>Our staff will call back later and answer your questions.</p>
-                            <form action="#" class="comment-form">
+                            <form action="/contact" method="post" class="comment-form">
                                 <div class="row">
                                     <div class="col-lg-6">
-                                        <input type="text" placeholder="Your name">
+                                        <input name="name" type="text" placeholder="Your name">
                                     </div>
                                     <div class="col-lg-6">
-                                        <input type="text" placeholder="Your email">
+                                        <input name="email" type="email" placeholder="Your email">
                                     </div>
                                     <div class="col-lg-12">
-                                        <textarea placeholder="Your message"></textarea>
+                                        <textarea name="message" placeholder="Your message"></textarea>
                                         <button type="submit" class="site-btn">Send message</button>
                                     </div>
                                 </div>
@@ -120,4 +121,13 @@
             </div>
         </div>
     </footer>
+    {% if send %} 
+    <script>
+        Swal.fire({
+            icon: 'success',
+            title: 'Success',
+            text: 'Message Sent',
+            })
+    </script>
+    {% endif %}
     {% endblock %}

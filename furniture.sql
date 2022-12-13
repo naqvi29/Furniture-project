@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 13, 2022 at 11:18 AM
+-- Generation Time: Dec 13, 2022 at 02:53 PM
 -- Server version: 10.4.27-MariaDB
--- PHP Version: 7.4.33
+-- PHP Version: 8.1.12
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -40,7 +40,9 @@ INSERT INTO `brands` (`id`, `name`) VALUES
 (1, 'InterWood'),
 (2, 'Chenone homes'),
 (3, 'Habitt'),
-(4, 'Index Furniture');
+(4, 'Index Furniture'),
+(5, 'example'),
+(6, 'Orage');
 
 -- --------------------------------------------------------
 
@@ -102,7 +104,7 @@ CREATE TABLE `colors` (
   `id` int(11) NOT NULL,
   `name` text NOT NULL,
   `code` text NOT NULL,
-  `product_ids` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL CHECK (json_valid(`product_ids`))
+  `product_ids` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -115,7 +117,8 @@ INSERT INTO `colors` (`id`, `name`, `code`, `product_ids`) VALUES
 (3, 'Red', '#FF0000', '[1, 2]'),
 (4, 'Purple', '#800080', '[2]'),
 (5, 'Yellow', '#FFFF00', '[2]'),
-(6, 'Green', '#008000', '[2]');
+(6, 'Green', '#008000', '[2]'),
+(7, 'Orange', '#E84725', NULL);
 
 -- --------------------------------------------------------
 
@@ -186,7 +189,8 @@ INSERT INTO `sizes` (`id`, `name`, `product_ids`) VALUES
 (1, 'S', '[1,2]'),
 (2, 'M', '[1,2]'),
 (3, 'L', '[1]'),
-(4, 'XS', '[1]');
+(4, 'XS', '[1]'),
+(5, 'T', NULL);
 
 -- --------------------------------------------------------
 
@@ -198,15 +202,17 @@ CREATE TABLE `users` (
   `id` int(11) NOT NULL,
   `email` text NOT NULL,
   `name` text NOT NULL,
-  `password` text NOT NULL
+  `password` text NOT NULL,
+  `type` text NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `users`
 --
 
-INSERT INTO `users` (`id`, `email`, `name`, `password`) VALUES
-(2, 'dev@test.com', 'Developer', '1234');
+INSERT INTO `users` (`id`, `email`, `name`, `password`, `type`) VALUES
+(2, 'dev@test.com', 'Developer', '1234', 'user'),
+(3, 'admin@admin.com', 'admin', 'admin', 'admin');
 
 --
 -- Indexes for dumped tables
@@ -262,7 +268,7 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `brands`
 --
 ALTER TABLE `brands`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT for table `cart_items`
@@ -280,7 +286,7 @@ ALTER TABLE `categories`
 -- AUTO_INCREMENT for table `colors`
 --
 ALTER TABLE `colors`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT for table `products`
@@ -292,13 +298,13 @@ ALTER TABLE `products`
 -- AUTO_INCREMENT for table `sizes`
 --
 ALTER TABLE `sizes`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

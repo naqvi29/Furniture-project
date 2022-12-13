@@ -1,0 +1,180 @@
+{% extends 'admin-layout.html' %}
+{% block title %} Add Product | Admin Dashboard {% endblock %}
+{% block heading %} Add Product {% endblock %}
+{% block page %} Add Product {% endblock %}
+
+{% block head %}
+
+<script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+{% endblock %}
+<style>
+  .multiselect {
+    width: 200px !important;
+  }
+
+  .selectBox {
+    position: relative !important;
+  }
+
+  .selectBox select {
+    width: 100% !important;
+    font-weight: bold !important;
+  }
+
+  .overSelect {
+    position: absolute !important;
+    left: 0 !important;
+    right: 0 !important;
+    top: 0 !important;
+    bottom: 0 !important;
+  }
+
+  #checkboxes {
+    display: none !important;
+    border: 1px #dadada solid !important;
+  }
+
+  #checkboxes label {
+    display: block !important;
+  }
+
+  #checkboxes label:hover {
+    background-color: #1e90ff !important;
+  }
+</style>
+
+{% block content %}
+<section class="content">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="card card-dark">
+          <div class="card-header">
+            <h3 class="card-title">Fill all required fields to add a Product</h3>
+          </div>
+          <!-- /.card-header -->
+          <!-- form start -->
+          <form action="/admin-add/product" method="post" enctype="multipart/form-data">
+            <div class="card-body">
+              <div class="form-group">
+                <label for="exampleInputEmail1">Name</label>
+                <input type="text" name="name" class="form-control" id="exampleInputEmail1" required>
+              </div>
+              <div class="form-group">
+                <label for="exampleInputEmail1">Brand</label>
+                <select class="form-control" name="brand_id" required>
+                  <option value="">Select a Brand</option>
+                  {% for i in brands %}
+                  <option value="{{i.id}}">{{i.name}}</option>
+                  {% endfor %}
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="exampleInputEmail1">Category</label>
+                <select class="form-control" name="category_id" required>
+                  <option value="">Select a Category</option>
+                  {% for i in categories %}
+                  <option value="{{i.id}}">{{i.name}}</option>
+                  {% endfor %}
+                </select>
+              </div>
+
+              <div class="multiselect">
+                <div class="selectBox" onclick="showCheckboxes()">
+                  <select name="color_ids" class="" required>
+                    <option>Select Colors</option>
+                  </select>
+                  <div class="overSelect"></div>
+                </div>
+                <div id="checkboxes">
+                  {% for i in colors %}
+                  <label for="color-{{i.id}}">
+                    <input name="sel-color" type="checkbox" id="color-{{i.id}}" value="{{i.id}}" />{{i.name}}</label>
+                  {% endfor %}
+                </div>
+              </div>
+
+
+                <!-- <div class="form-group">
+                  <label for="exampleInputEmail1">Available Colors</label>
+                  <select class="form-control" name="color_ids" required>
+                    <option value="">Select Colors</option>
+                    {% for i in colors %}
+                    <option value="{{i.id}}">{{i.name}}</option>
+                    {% endfor %}
+                  </select>
+                </div> -->
+                <div class="form-group">
+                  <label for="exampleInputEmail1">Available Sizes</label>
+                  <select class="form-control" name="size_ids" required>
+                    <option value="">Select Sizes</option>
+                    {% for i in sizes %}
+                    <option value="{{i.id}}">{{i.name}}</option>
+                    {% endfor %}
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label for="exampleInputEmail1">Price</label>
+                  <input type="number" step="any" name="price" class="form-control" id="exampleInputEmail1" required>
+                </div>
+                <div class="form-group">
+                  <label for="exampleInputEmail1">Tags</label>
+                  <input type="text" name="tags" class="form-control" id="exampleInputEmail1" required>
+                </div>
+                <div class="form-group">
+                  <label for="exampleInputEmail1">Description</label>
+                  <input type="text" name="description" class="form-control" id="exampleInputEmail1" required>
+                </div>
+                <div class="form-group">
+                  <label for="exampleInputFile">Image</label>
+                  <div class="input-group">
+                    <div class="custom-file">
+                      <input type="file" name="image" class="custom-file-input" id="exampleInputFile" required>
+                      <label class="custom-file-label" for="exampleInputFile">Choose file</label>
+                    </div>
+                    <div class="input-group-append">
+                      <span class="input-group-text">Upload</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!-- /.card-body -->
+
+              <div class="card-footer">
+                <button type="submit" class="btn btn-success">Add</button>
+              </div>
+          </form>
+        </div>
+
+      </div>
+    </div>
+    <!-- /.row -->
+  </div><!-- /.container-fluid -->
+</section>
+{% endblock %}
+{% block scripts %}
+{% if error %}
+<script>
+  Swal.fire({
+    icon: 'error',
+    title: 'Oops...',
+    text: '{{error}}',
+  })
+
+</script>
+{% endif %}
+<script>
+  var expanded = false;
+
+  function showCheckboxes() {
+    var checkboxes = document.getElementById("checkboxes");
+    if (!expanded) {
+      checkboxes.style.display = "block";
+      expanded = true;
+    } else {
+      checkboxes.style.display = "none";
+      expanded = false;
+    }
+  }
+</script>
+{% endblock %}
